@@ -18,6 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get ('payment-page', [PaymentController::class, 'index'] );
+Route::any ('payment-page', [PaymentController::class, 'index'] );
+Route::any ('verify-payment', [PaymentController::class, 'verify'] );
 
 
