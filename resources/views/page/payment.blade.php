@@ -35,6 +35,19 @@
                 <input type="email" name="email" id="email" class="form-control" required placeholder="Enter email address">
              </div>
          </div>
+
+        <div class="col-6">
+    <label>Service</label>
+    <select id="service" class="form-control">
+        <option value="">-- Select Service --</option>
+        <option value="Web Development">Web Development</option>
+        <option value="Graphics Design">Graphics Design</option>
+        <option value="Consultation">Consultation</option>
+        <option value="App Development">App Development</option>
+    </select>
+</div>
+
+
         <div class="col-6">
             <label for="amount">Amount</label>
             <input type="number" name="amount" placeholder="Enter amount" id="amount" class="form-control" >
@@ -70,7 +83,9 @@
             var amount = $("#amount").val();
             //make our payment
             makePayment(amount,email,phone,name);
-    
+        var service = $("#service").val();
+makePayment(amount, email, phone, name, service);
+
             
         });
     });
@@ -78,16 +93,35 @@
         function makePayment(amount,email,phone_number,name) {
             FlutterwaveCheckout({
                 public_key: "FLWPUBK_TEST-c00b1d7a00353423a575ef61dfc47442-X",
-                tx_ref: "RX1_{{substr(rand(0,time()),0,7)}}",
+                tx_ref: "RX1_" + Math.floor((Math.random() * 1000000000) + 1),
                 amount,
-                currency: "USD",
-                payment_options: "",
+                currency: "KES",
+                payment_options: "card, mpesa, mobilemoney",
                
                 customer: {
                     email,
                     phone_number,
                     name,
                 },
+
+            callback: function (data) {
+    var transaction_id = data.transaction_id;
+    var _token = $('input[name="_token"]').val();
+
+    $.ajax({
+        type:"POST",
+        url:"{{URL::to('save-payment')}}",
+        data:{
+            name: name,
+            email: email,
+            phone: phone_number,
+            service: service,
+            amount: amount,
+            transaction_id: transaction_id,
+            _token
+        },
+    });
+
                 callback: function (data) {
                     var transaction_id = data.transaction_id;
                   // make ajax reuest
@@ -120,6 +154,10 @@
             });
              
         }
+
+
+
+
     </script>
   </body>
 </html>

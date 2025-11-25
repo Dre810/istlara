@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('save-payment', [PaymentController::class, 'store']);
+
+Route::get('payments', [PaymentController::class, 'list']);
+
+
 Route::get('/', function () {
     return view('welcome');
 });
