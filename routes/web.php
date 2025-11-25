@@ -18,6 +18,9 @@ Route::post('save-payment', [PaymentController::class, 'store']);
 
 Route::get('payments', [PaymentController::class, 'list']);
 
+Route::get('/admin', function () {
+    return view('page.admin');
+});
 
 Route::get('/', function () {
     return view('welcome');
